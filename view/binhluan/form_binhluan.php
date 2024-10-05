@@ -53,7 +53,11 @@ $dsbl = selectAll_binhluan($idSp);
         }
         echo '</ul>';
     } else {
-       
+        echo '
+    <div>
+        <p class="py-4 px-5 text-[#85640] rounded-lg mb-4 bg-[#fff3cd] border border-[#ffeeba]">
+            Hiện tại sản phẩm này chưa có bình luận.</p>
+    </div>';
     }
     ?>
 </ol>

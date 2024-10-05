@@ -38,7 +38,12 @@
                 <th scope="col" class="px-6 py-3">
                     Tên Bình luận
                 </th>
-                
+                <th scope="col" class="px-6 py-3">
+                    Thời gian
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    #
+                </th>
             </tr>
         </thead>
         <tbody class="hover:bg-gray-100">
