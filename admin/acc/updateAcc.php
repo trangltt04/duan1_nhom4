@@ -7,13 +7,13 @@
         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 ">ID người dùng</label>
         <input type="text" id="disabled-input" aria-label="disabled input"
             class="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
-            value="<?php echo $acc['id'] ?>">
+            value="<?php echo $acc['id'] ?>" disabled>
     </div>
     <div class="mb-5">
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Tên Người dùng</label>
         <input type="text"
             class="bg-gray-100 border cursor-not-allowed border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5  focus:border-blue-500"
-            name="nameacc" value="<?php echo $acc['name'] ?>">
+            name="nameacc" value="<?php echo $acc['name'] ?>" disabled>
     </div>
     <div class="mb-5">
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Hình Ảnh Người Dùng</label>
@@ -23,16 +23,16 @@
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Số Diện Thoại</label>
         <input type="text"
             class="bg-gray-100 border cursor-not-allowed border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5  focus:border-blue-500"
-            name="phone" value="<?php echo $acc['phone'] ?>">
+            name="phone" value="<?php echo $acc['phone'] ?>" disabled>
     </div>
     <div class="mb-5">
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
         <input type="text"
             class="bg-gray-100 border cursor-not-allowed border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5  focus:border-blue-500"
-            name="email" value="<?php echo $acc['email'] ?>">
+            name="email" value="<?php echo $acc['email'] ?>" disabled>
     </div>
     <div class="mb-5">
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Vai trò</label>
+        <label for="password" class="block mb-2 text-sm font-medium text-gray-900" disabled>Vai trò</label>
         <select name="is_admin" id="cars"
             class="bg-gray-100 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5  focus:border-blue-500">
             <?php
