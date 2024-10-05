@@ -16,5 +16,11 @@ function list_acc($searchName)
     $listAcc = pdo_query($sql);
     return $listAcc;
 }
+function edit_acc($id)
+{
+    $sql = "SELECT * FROM users WHERE id = $id";
+    $acc = pdo_query_one($sql);
+    return $acc;
+}
 
 ?>

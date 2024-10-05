@@ -21,10 +21,10 @@
             </div>
         </form>
 
-        <!-- <div class=""><a href="index.php?act=addDm"
+        <div class=""><a href="index.php?act=addDm"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2  focus:outline-none">Nhập
                 thêm</a>
-        </div> -->
+        </div>
     </div>
 
 
@@ -57,9 +57,9 @@
         </thead>
         <tbody class="hover:bg-gray-100">
 
-           
 
-           
+
+
 
             <?php
             if (!empty($listAcc)) {
