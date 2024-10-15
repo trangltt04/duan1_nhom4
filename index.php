@@ -1,12 +1,12 @@
 <?php
 ob_start();
 session_start();
-include ("./model/connect.php");
-include ("./model/danhmuc.php");
-include ("./model/sach.php");
-include ("./model/taiKhoan.php");
-include ("./model/tacGia.php");
-include ("./model/giohang.php");
+include("./model/connect.php");
+include("./model/danhmuc.php");
+include("./model/sach.php");
+include("./model/taiKhoan.php");
+include("./model/tacGia.php");
+include("./model/giohang.php");
 // include ("../model/binhLuan.php");
 // include ("../model/sach.php");
 
@@ -47,15 +47,15 @@ $list_Top_6_Sach_home = list_Top_6_Sach_home();
 // }
 // $countProducts = count($_SESSION['myCart']);
 
-include ("view/header.php");
+include("view/header.php");
 if (isset($_GET["act"])) {
     $act = $_GET["act"];
     switch ($act) {
         case 'tintuc':
-            include ("./view/tintuc.php");
+            include("./view/tintuc.php");
             break;
         case 'lienhe':
-            include ("./view/lienhe.php");
+            include("./view/lienhe.php");
             break;
         case 'sanpham':
             // if ((isset($_POST["kyw"])) && ($_POST["kyw"]) != "") {
@@ -72,7 +72,7 @@ if (isset($_GET["act"])) {
             // $listSp = list_sach($danh_muc_id);   
             $listSp = list_sach($danh_muc_id, "", "");
 
-            include ("view/sanpham.php");
+            include("view/sanpham.php");
             break;
         // lọc ở sản phẩm
         case 'sach':
@@ -93,7 +93,7 @@ if (isset($_GET["act"])) {
             }
 
             $listSp = list_All_home_sach($danh_muc_id, $searchSP, $tacGia_id);
-            include ("view/sanpham.php");
+            include("view/sanpham.php");
             break;
 
         //-- TÌM TÁC GIẢ TRANG SẢN PHẨM
@@ -105,7 +105,7 @@ if (isset($_GET["act"])) {
             }
             $listSp = list_sach(0, $kyw);
 
-            include ("view/sanpham.php");
+            include("view/sanpham.php");
             break;
 
         case 'sanphamct':
@@ -118,9 +118,9 @@ if (isset($_GET["act"])) {
                 $sach_cungLoai = Select_sach_cungLoai($id, $sanPhamCt["danh_muc_id"]);
                 $bien_the_bia = select_loai_bia_theo_sach($id);
             } else {
-                include ("view/home.php");
+                include("view/home.php");
             }
-            include ("view/sanphamct.php");
+            include("view/sanphamct.php");
             break;
 
         //đăng kí
@@ -170,7 +170,7 @@ if (isset($_GET["act"])) {
                 }
             }
 
-            include ("view/taiKhoan/sigin.php");
+            include("view/taiKhoan/sigin.php");
             break;
 
         // đăng nhập
@@ -206,7 +206,7 @@ if (isset($_GET["act"])) {
                     }
                 }
             }
-            include ("view/taiKhoan/login.php");
+            include("view/taiKhoan/login.php");
             break;
 
 
@@ -273,7 +273,7 @@ if (isset($_GET["act"])) {
 
                 $gioHang = select_1_sach($_SESSION['user']['id']);
                 $tongGia = tong_gia($_SESSION['user']['id']);
-                include ('./view/giohang.php');
+                include('./view/giohang.php');
             } else {
                 // echo "Bạn cần đăng nhập để xem giỏ hàng của bạn";
                 echo '<div class="container-content my-5 ">
@@ -291,10 +291,20 @@ if (isset($_GET["act"])) {
             }
             $gioHang = select_1_sach($_SESSION['user']['id']);
             $tongGia = tong_gia($_SESSION['user']['id']);
-            include ('./view/giohang.php');
+            include('./view/giohang.php');
             break;
         case 'add_to_card':
             if (isset($_POST['submit']) && $_POST['submit']) {
+                // Kiểm tra token
+                if (!isset($_POST['form_token']) || $_POST['form_token'] !== $_SESSION['form_token']) {
+                    // Token không hợp lệ hoặc đã được sử dụng
+                    header("Location: index.php?act=giohang");
+                    exit();
+                }
+
+                // Xóa token sau khi sử dụng
+                unset($_SESSION['form_token']);
+
                 $product_id = $_POST['id'];
                 $gia = $_POST['gia'];
                 $so_luong = $_POST['so_luong'];
@@ -306,8 +316,6 @@ if (isset($_GET["act"])) {
                 if (isset($selectedLoaiBia)) {
                     $selectedLoaiBia = trim($selectedLoaiBia, "[]"); // Loại bỏ các ký tự "[" và "]"
                     $arr = explode(",", $selectedLoaiBia);
-                    // print_r($arr);
-                    // die;
 
                     if (is_array($arr)) {
                         if (isset($arr[1])) {
@@ -324,22 +332,20 @@ if (isset($_GET["act"])) {
                     $muc_tang = 0;
                     $loai_bia = '';
                 }
+
                 if (isset($_SESSION['user']['id'])) {
                     // Người dùng đã đăng nhập, cho phép thêm mới vào giỏ hàng
                     $gioHang = select_1_sach($_SESSION['user']['id']);
-
                     $product_exists = false;
                     foreach ($gioHang as &$item) {
                         if ($item['id_product'] == $product_id && $item['loai_bia'] == $loai_bia) {
                             $product_exists = true;
                             $item['so_luong'] += $so_luong;
-
                             update_SanPham_Da_co_cart($_SESSION['user']['id'], $item['so_luong'], $item['id_product'], $loai_bia, $gia);
                             break;
                         }
                     }
                     if (!$product_exists) {
-
                         $gia_sau_bien_the = floatval($gia) + $muc_tang;
                         add_gio_hang($_SESSION['user']['id'], $product_id, $so_luong, $gia_sau_bien_the, $loai_bia);
                     }
@@ -349,12 +355,11 @@ if (isset($_GET["act"])) {
                     exit();
                 }
             }
-
             // Hiển thị giỏ hàng
             if (isset($_SESSION['user']['id'])) {
                 $gioHang = select_1_sach($_SESSION['user']['id']);
                 $tongGia = tong_gia($_SESSION['user']['id']);
-                include ('./view/giohang.php');
+                include('./view/giohang.php');
             }
             break;
         //-- THANH TOÁN
@@ -437,7 +442,7 @@ if (isset($_GET["act"])) {
                 if ($id_DH) {
                     // Lưu thành công
                     // Tiếp tục xử lý chuyển hướng đến trang thanh toán của VNPAY
-                    include ("./vnpay_php/vnpay_create_payment.php");
+                    include("./vnpay_php/vnpay_create_payment.php");
                 } else {
                     // Lưu thất bại
                     echo "Failed to save order data. Please try again.";
@@ -504,14 +509,14 @@ if (isset($_GET["act"])) {
             }
             $gioHang = select_1_sach($_SESSION['user']['id']);
             $tongGia = tong_gia($_SESSION['user']['id']);
-            include ('./view/thanhtoan.php');
+            include('./view/thanhtoan.php');
             break;
 
         case 'thankyou':
             if (isset($_GET["id_DH"]) && ($_GET["id_DH"] > 0)) {
                 $id = $_GET["id_DH"];
             }
-            include ("./view/thankyou.php");
+            include("./view/thankyou.php");
             break;
         case 'donHangCuaToi':
             if (isset($_POST['submit'])) {
@@ -523,7 +528,7 @@ if (isset($_GET["act"])) {
             }
             $select_Don_hang_cua_toi = select_Don_hang_cua_toi_where_idUser($_SESSION['user']['id'], $search_id_DH);
             $Don_hang_cua_toi_thanhtoan = select_Don_hang_cua_toi_thanhtoan_where_id($_SESSION['user']['id']);
-            include ("./view/donHang/donHangCuaToi.php");
+            include("./view/donHang/donHangCuaToi.php");
             break;
         case 'ChiTietDonHangCuaToi':
             if (isset($_GET["id"]) && ($_GET["id"] > 0)) {
@@ -531,7 +536,7 @@ if (isset($_GET["act"])) {
                 $list_order_cart_where_id = select_ChiTietDonHang_where_id($id);
                 $gioHang = select_gio_hang_item_thanhtoan_where_id($id);
             }
-            include ("./view/donHang/ChiTietDonHangCuaToi.php");
+            include("./view/donHang/ChiTietDonHangCuaToi.php");
             break;
         case 'updateDHcuatoi':
             if (isset($_POST['submit'])) {
@@ -541,19 +546,19 @@ if (isset($_GET["act"])) {
                 $list_order_cart_where_id = select_ChiTietDonHang_where_id($id);
                 $gioHang = select_gio_hang_item_thanhtoan_where_id($id);
             }
-            include ("./view/donHang/ChiTietDonHangCuaToi.php");
+            include("./view/donHang/ChiTietDonHangCuaToi.php");
             break;
         case 'flashsale':
             $listSp = list_sach_flashSale_home();
-            include ("view/sanpham.php");
+            include("view/sanpham.php");
             break;
         default:
-            include ("view/home.php");
+            include("view/home.php");
             break;
     }
 } else {
-    include ("view/home.php");
+    include("view/home.php");
 }
 
-include ("view/footer.php");
+include("view/footer.php");
 ?>
